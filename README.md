@@ -53,6 +53,15 @@ npm install
 npm run dev
 ```
 
+### Streamlit Version
+
+A Python Streamlit version is available for easy deployment:
+
+```bash
+# Run the Streamlit app locally
+streamlit run app.py
+```
+
 ### Build for Production
 
 ```bash
@@ -65,22 +74,21 @@ npm run preview
 
 ## 🌐 Deployment
 
-### Deploy to Streamlit Cloud
+### Deploy to Streamlit Cloud (Recommended)
+
+The easiest way to deploy this app is using the Streamlit version:
 
 1. **Push to GitHub**: Ensure your code is pushed to a GitHub repository
 
-2. **Connect to Streamlit**: 
+2. **Connect to Streamlit Cloud**: 
    - Go to [Streamlit Cloud](https://streamlit.io/cloud)
    - Connect your GitHub account
    - Select this repository
+   - Set main file path to: `app.py`
 
-3. **Configure Build Settings**:
-   ```
-   Build command: npm run build
-   Publish directory: dist
-   ```
+3. **Deploy**: Streamlit Cloud will automatically install dependencies from `requirements.txt` and deploy your app
 
-### Alternative Deployment Options
+### Deploy React Version
 
 #### Netlify
 ```bash
@@ -117,6 +125,20 @@ npm run build
 | **Tailwind CSS** | Utility-first CSS framework |
 | **Lucide React** | Beautiful, customizable icons |
 | **Frankfurter API** | Real-time exchange rate data (Free) |
+| **Streamlit** | Python framework for easy deployment |
+| **Requests** | HTTP library for API calls |
+
+## 📊 Streamlit App Features
+
+The `app.py` file provides the same functionality as the React app:
+
+- ✅ Real-time currency conversion
+- ✅ Historical data visualization
+- ✅ Support for 65+ currencies including African currencies
+- ✅ Error handling for unsupported currencies
+- ✅ Same-currency selection warnings
+- ✅ Mobile-responsive design
+- ✅ Developer branding in sidebar
 
 ## 🎨 Features Showcase
 
