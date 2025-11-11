@@ -2,6 +2,7 @@ import streamlit as st
 import requests
 import plotly.graph_objects as go
 from datetime import datetime, timedelta
+import pandas as pd
 
 st.set_page_config(
     page_title="Currency Exchange",
@@ -65,40 +66,15 @@ try:
         dates = list(hist_data['rates'].keys())
         rates = [hist_data['rates'][date][to_currency] for date in dates]
 
-        # Create simple chart data without pandas
-        chart_data = []
-        for i, date in enumerate(dates):
-            chart_data.append({"date": date, "rate": rates[i]})
+        df = pd.DataFrame({'Date': dates, 'Rate': rates})
+        df['Date'] = pd.to_datetime(df['Date'])
 
-        # Create plotly chart
         fig = go.Figure()
-        fig.add_trace(go.Scatter(
-            x=dates,
-            y=rates,
-            mode='lines+markers',
-            name=f"{from_currency}/{to_currency}",
-            line=dict(color='#2563eb', width=2),
-            marker=dict(size=6, color='#2563eb')
-        ))
-
-        fig.update_layout(
-            title=f"{from_currency} to {to_currency} Exchange Rate (30 Days)",
-            xaxis_title="Date",
-            yaxis_title="Exchange Rate",
-            template="plotly_white",
-            height=400
-        )
+        fig.add_trace(go.Scatter(x=df['Date'], y=df['Rate'], mode='lines+markers', name=f"{from_currency}/{to_currency}"))
+        fig.update_layout(title=f"{from_currency} to {to_currency} Exchange Rate", xaxis_title="Date", yaxis_title="Exchange Rate")
 
         st.plotly_chart(fig, use_container_width=True)
     else:
         st.warning("Historical data not available for this currency pair")
 except Exception as e:
     st.error(f"Error fetching historical data: {str(e)}")
-
-# Developer info
-st.markdown("---")
-st.markdown("### 👨‍💻 Developer")
-st.markdown("**Joseph Theophilus Odubena**")
-st.markdown("*Full Stack Developer*")
-st.markdown("Passionate about solving humanity's challenges through technology.")
-st.markdown("[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue)](https://www.linkedin.com/in/theophilus-odubena-180148180/)")
