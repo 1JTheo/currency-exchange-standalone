@@ -518,7 +518,7 @@ export default function App() {
                 </svg>
               </a>
               <a
-                href="https://github.com/odubela"
+                href="https://github.com/1JTheo"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-300 hover:text-blue-200 transition-colors"
