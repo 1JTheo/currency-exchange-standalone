@@ -31,6 +31,8 @@
 - **XAF** - Central African CFA Franc
 - And many more...
 
+> **Note:** Some African currencies may have limited historical data availability. The app provides intelligent fallback with trend simulations for currencies without full historical data support.
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -41,7 +43,7 @@
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/currency-exchange-app.git
+git clone https://github.com/odubela/currency-exchange-app.git
 cd currency-exchange-app
 
 # Install dependencies
@@ -207,7 +209,19 @@ This app uses the **Frankfurter API** which provides:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## 👨‍💻 Developer
+
+**Joseph Theophilus Odubena**  
+*Full Stack Developer*
+
+Passionate about solving humanity's challenges through technology. Building innovative solutions across various sectors.
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue)](https://www.linkedin.com/in/theophilus-odubena-180148180/)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-black)](https://github.com/odubela)
+
+---
+
+## �🙏 Acknowledgments
 
 - [Frankfurter API](https://www.frankfurter.app/) for providing free exchange rate data
 - [Lucide](https://lucide.dev/) for beautiful icons
@@ -225,4 +239,4 @@ If you encounter any issues or have questions:
 
 **⭐ If you find this project useful, please give it a star!**
 
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/currency-exchange-app?style=social)](https://github.com/yourusername/currency-exchange-app/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/odubela/currency-exchange-app?style=social)](https://github.com/odubela/currency-exchange-app/stargazers)
