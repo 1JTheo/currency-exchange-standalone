@@ -8,6 +8,7 @@ import {
   BarChart3Icon,
   GlobeIcon,
   ClockIcon,
+  AlertTriangle,
 } from "lucide-react";
 
 function CurrencyChart({
@@ -76,11 +77,11 @@ function CurrencyChart({
           setError(err instanceof Error ? err.message : 'Failed to load historical data');
         }
         
-        // Generate more realistic trend data based on current rate if available
+        // Generate more realistic trend data
         const generateTrendData = () => {
           const data = [];
-          // Use exchange rate if available, otherwise use a base value
-          let baseValue = exchangeRate || Math.random() * 2 + 0.5;
+          // Start with a reasonable base value for currency conversion
+          let baseValue = Math.random() * 2 + 0.5;
           
           // Create more realistic currency fluctuation (±5% variation)
           for (let i = 0; i < 12; i++) {
@@ -98,7 +99,7 @@ function CurrencyChart({
     };
 
     fetchHistoricalData();
-  }, [fromCurrency, toCurrency, exchangeRate]);
+  }, [fromCurrency, toCurrency]);
 
   if (loading) {
     return (
@@ -185,8 +186,9 @@ function CurrencySelect({
   onChange: (value: string) => void;
   options: string[];
 }) {
-  // Currency names for better UX
+  // Comprehensive currency names
   const currencyNames: Record<string, string> = {
+    // Major World Currencies
     USD: 'US Dollar',
     EUR: 'Euro',
     GBP: 'British Pound',
@@ -196,6 +198,8 @@ function CurrencySelect({
     CHF: 'Swiss Franc',
     CNY: 'Chinese Yuan',
     INR: 'Indian Rupee',
+    
+    // African Currencies
     NGN: 'Nigerian Naira',
     ZAR: 'South African Rand',
     EGP: 'Egyptian Pound',
@@ -214,7 +218,41 @@ function CurrencySelect({
     RWF: 'Rwandan Franc',
     ETB: 'Ethiopian Birr',
     MUR: 'Mauritian Rupee',
-    MWK: 'Malawian Kwacha'
+    MWK: 'Malawian Kwacha',
+    
+    // European Currencies
+    NOK: 'Norwegian Krone',
+    SEK: 'Swedish Krona',
+    DKK: 'Danish Krone',
+    PLN: 'Polish Zloty',
+    HUF: 'Hungarian Forint',
+    CZK: 'Czech Koruna',
+    RON: 'Romanian Leu',
+    BGN: 'Bulgarian Lev',
+    HRK: 'Croatian Kuna',
+    
+    // Asian Currencies
+    KRW: 'South Korean Won',
+    SGD: 'Singapore Dollar',
+    HKD: 'Hong Kong Dollar',
+    THB: 'Thai Baht',
+    MYR: 'Malaysian Ringgit',
+    IDR: 'Indonesian Rupiah',
+    PHP: 'Philippine Peso',
+    
+    // Other Major Currencies
+    BRL: 'Brazilian Real',
+    MXN: 'Mexican Peso',
+    RUB: 'Russian Ruble',
+    TRY: 'Turkish Lira',
+    NZD: 'New Zealand Dollar',
+    ILS: 'Israeli Shekel',
+    
+    // Middle East
+    AED: 'UAE Dirham',
+    SAR: 'Saudi Riyal',
+    QAR: 'Qatari Riyal',
+    KWD: 'Kuwaiti Dinar',
   };
 
   return (
@@ -234,35 +272,124 @@ function CurrencySelect({
 
 export default function App() {
   const [amount, setAmount] = useState<string>("1");
-  const [fromCurrency, setFromCurrency] = useState<string>("NGN");
-  const [toCurrency, setToCurrency] = useState<string>("USD");
+  const [fromCurrency, setFromCurrency] = useState<string>("");
+  const [toCurrency, setToCurrency] = useState<string>("");
   const [convertedAmount, setConvertedAmount] = useState<number | null>(null);
   const [exchangeRate, setExchangeRate] = useState<number | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [currencies, setCurrencies] = useState<string[]>([]);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+  const [unsupportedCurrency, setUnsupportedCurrency] = useState<string | null>(null);
+  const [temporarilyUnavailableCurrency, setTemporarilyUnavailableCurrency] = useState<string | null>(null);
 
+  // Helper: map country code to currency code
+  const countryToCurrency: Record<string, string> = {
+    US: 'USD',
+    GB: 'GBP',
+    NG: 'NGN',
+    ZA: 'ZAR',
+    KE: 'KES',
+    GH: 'GHS',
+    UG: 'UGX',
+    TZ: 'TZS',
+    MA: 'MAD',
+    EG: 'EGP',
+    CA: 'CAD',
+    AU: 'AUD',
+    EU: 'EUR',
+    FR: 'EUR',
+    DE: 'EUR',
+    IT: 'EUR',
+    ES: 'EUR',
+    IN: 'INR',
+    JP: 'JPY',
+    CN: 'CNY',
+    BR: 'BRL',
+    // ...add more as needed
+  };
+
+    function getDefaultCurrency(currencies: string[]): string {
+      let country = undefined;
+      if (navigator.languages && navigator.languages.length > 0) {
+        country = navigator.languages[0].split('-')[1];
+      } else if (navigator.language) {
+        country = navigator.language.split('-')[1];
+      }
+      let currency = countryToCurrency[country || ''] || 'EUR';
+      if (!currencies.includes(currency)) currency = 'EUR';
+      return currency;
+    }
+
+  // Set default currencies after currencies are loaded
+  useEffect(() => {
+    if (currencies.length > 0 && !fromCurrency && !toCurrency) {
+      const detected = getDefaultCurrency(currencies);
+      setFromCurrency(detected);
+      setToCurrency('USD');
+    }
+  }, [currencies]);
+
+  // Prevent same currency selection
+  useEffect(() => {
+    if (fromCurrency && toCurrency && fromCurrency === toCurrency) {
+      // If same currency selected, switch to a sensible default
+      const defaultPairs: Record<string, string> = {
+        'USD': 'EUR',
+        'EUR': 'USD',
+        'GBP': 'USD',
+        'JPY': 'USD',
+        'CAD': 'USD',
+        'AUD': 'USD',
+        'CHF': 'EUR',
+        'CNY': 'USD',
+        'INR': 'USD',
+        'NGN': 'USD',
+        'ZAR': 'USD',
+        'EGP': 'USD',
+        'KES': 'USD',
+        'GHS': 'USD',
+        'UGX': 'USD',
+        'TZS': 'USD',
+        'MAD': 'EUR',
+      };
+
+      const newToCurrency = defaultPairs[fromCurrency] || 'USD';
+      setToCurrency(newToCurrency);
+    }
+  }, [fromCurrency, toCurrency]);
   // Fetch available currencies
   useEffect(() => {
     const fetchCurrencies = async () => {
       try {
         const res = await fetch("https://api.frankfurter.app/currencies");
         const data = await res.json();
-        const availableCurrencies = Object.keys(data);
+        const apiCurrencies = Object.keys(data);
         
-        // Enhanced fallback currencies including African currencies
-        const fallbackCurrencies = [
-          'USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY', 'INR',
-          'ZAR', 'EGP', 'MAD', 'TND', 'KES', 'UGX', 'TZS', 'GHS', 'XOF',
-          'XAF', 'BWP', 'MZN', 'AOA', 'ZMW', 'RWF', 'ETB', 'MUR', 'MWK'
+        // Essential African currencies (some may not be in Frankfurter API)
+        const essentialAfricanCurrencies = [
+          'NGN', 'ZAR', 'EGP', 'MAD', 'TND', 'KES', 'UGX', 'TZS', 'GHS', 
+          'XOF', 'XAF', 'BWP', 'MZN', 'AOA', 'ZMW', 'RWF', 'ETB', 'MUR', 'MWK'
         ];
         
-        // Combine available currencies with fallback, removing duplicates and sorting
-        const combinedCurrencies = Array.from(new Set([...availableCurrencies, ...fallbackCurrencies]))
-          .sort();
+        // Major world currencies
+        const majorCurrencies = ['USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'CHF', 'CNY', 'INR'];
         
-        setCurrencies(combinedCurrencies);
-        console.log(`Loaded ${combinedCurrencies.length} currencies including African currencies`);
+        // Combine all currencies: API currencies + essential African currencies + major currencies
+        const allCurrencies = Array.from(new Set([
+          ...apiCurrencies,
+          ...essentialAfricanCurrencies,
+          ...majorCurrencies
+        ])).sort();
+        
+        setCurrencies(allCurrencies);
+        console.log(`Loaded ${allCurrencies.length} currencies including African currencies not in API`);
+        
+        // Check which African currencies are missing from API
+        const missingAfricanCurrencies = essentialAfricanCurrencies.filter(curr => !apiCurrencies.includes(curr));
+        if (missingAfricanCurrencies.length > 0) {
+          console.log('African currencies not supported by API (will use fallback rates):', missingAfricanCurrencies);
+        }
+        
       } catch (error) {
         console.error("Error fetching currencies:", error);
         // Comprehensive fallback including African currencies
@@ -282,23 +409,58 @@ export default function App() {
     const fetchExchangeRate = async () => {
       if (!fromCurrency || !toCurrency) return;
       setLoading(true);
+  setUnsupportedCurrency(null);
+  setTemporarilyUnavailableCurrency(null);
+      
+      // List of currencies not supported by Frankfurter API
+      const unsupported = ['NGN', 'KES', 'UGX', 'TZS', 'GHS', 'RWF', 'ETB', 'MWK', 'XOF', 'XAF', 'BWP', 'MZN', 'AOA', 'ZMW', 'MAD', 'TND'];
+      if (unsupported.includes(fromCurrency)) {
+        setUnsupportedCurrency(fromCurrency);
+        setExchangeRate(null);
+        setConvertedAmount(null);
+        setLoading(false);
+        return;
+      }
+      if (unsupported.includes(toCurrency)) {
+        setUnsupportedCurrency(toCurrency);
+        setExchangeRate(null);
+        setConvertedAmount(null);
+        setLoading(false);
+        return;
+      }
+      
       try {
         const res = await fetch(
           `https://api.frankfurter.app/latest?from=${fromCurrency}&to=${toCurrency}`
         );
-        const data = await res.json();
-        const rate = data.rates[toCurrency];
-        setExchangeRate(rate);
-        setConvertedAmount((parseFloat(amount) || 0) * rate);
-        setLastUpdated(new Date());
+        if (res.ok) {
+          const data = await res.json();
+          const rate = data.rates[toCurrency];
+          if (rate) {
+            setExchangeRate(rate);
+            setConvertedAmount((parseFloat(amount) || 0) * rate);
+            setLastUpdated(new Date());
+          } else {
+            setUnsupportedCurrency(toCurrency);
+            setExchangeRate(null);
+            setConvertedAmount(null);
+          }
+        } else {
+          setTemporarilyUnavailableCurrency(fromCurrency);
+          setExchangeRate(null);
+          setConvertedAmount(null);
+        }
       } catch (error) {
         console.error("Error fetching exchange rate:", error);
+        setTemporarilyUnavailableCurrency(fromCurrency);
+        setExchangeRate(null);
+        setConvertedAmount(null);
       } finally {
         setLoading(false);
       }
     };
     fetchExchangeRate();
-  }, [fromCurrency, toCurrency]);
+  }, [fromCurrency, toCurrency, amount]);
 
   const handleAmountChange = (value: string) => {
     setAmount(value);
@@ -315,17 +477,51 @@ export default function App() {
   const refreshRate = async () => {
     if (fromCurrency && toCurrency) {
       setLoading(true);
+      setUnsupportedCurrency(null);
+      setTemporarilyUnavailableCurrency(null);
+      // List of currencies not supported by Frankfurter API
+      const unsupported = ['NGN', 'KES', 'UGX', 'TZS', 'GHS', 'RWF', 'ETB', 'MWK', 'XOF', 'XAF', 'BWP', 'MZN', 'AOA', 'ZMW', 'MAD', 'TND'];
+      if (unsupported.includes(fromCurrency)) {
+        setUnsupportedCurrency(fromCurrency);
+        setExchangeRate(null);
+        setConvertedAmount(null);
+        setLoading(false);
+        return;
+      }
+      if (unsupported.includes(toCurrency)) {
+        setUnsupportedCurrency(toCurrency);
+        setExchangeRate(null);
+        setConvertedAmount(null);
+        setLoading(false);
+        return;
+      }
+      
       try {
         const res = await fetch(
           `https://api.frankfurter.app/latest?from=${fromCurrency}&to=${toCurrency}`
         );
-        const data = await res.json();
-        const rate = data.rates[toCurrency];
-        setExchangeRate(rate);
-        setConvertedAmount((parseFloat(amount) || 0) * rate);
-        setLastUpdated(new Date());
+        if (res.ok) {
+          const data = await res.json();
+          const rate = data.rates[toCurrency];
+          if (rate) {
+            setExchangeRate(rate);
+            setConvertedAmount((parseFloat(amount) || 0) * rate);
+            setLastUpdated(new Date());
+          } else {
+            setUnsupportedCurrency(toCurrency);
+            setExchangeRate(null);
+            setConvertedAmount(null);
+          }
+        } else {
+          setTemporarilyUnavailableCurrency(fromCurrency);
+          setExchangeRate(null);
+          setConvertedAmount(null);
+        }
       } catch (error) {
         console.error("Error refreshing rate:", error);
+        setTemporarilyUnavailableCurrency(fromCurrency);
+        setExchangeRate(null);
+        setConvertedAmount(null);
       } finally {
         setLoading(false);
       }
@@ -433,34 +629,66 @@ export default function App() {
 
                 {/* Result */}
                 <div className="glass rounded-2xl p-6">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <p className="text-sm text-white/70 mb-1">Converted Amount</p>
-                      {loading ? (
-                        <div className="h-10 bg-white/20 loading-shimmer rounded mt-1"></div>
-                      ) : (
-                        <p className="text-3xl md:text-4xl font-bold text-white">
-                          {convertedAmount?.toFixed(2)} {toCurrency}
-                        </p>
-                      )}
-                      {exchangeRate && (
-                        <p className="text-sm text-white/70 mt-3 flex items-center">
-                          <TrendingUpIcon size={14} className="mr-1" />
-                          <span>
-                            1 {fromCurrency} = {exchangeRate.toFixed(6)} {toCurrency}
-                          </span>
-                        </p>
-                      )}
+                  {unsupportedCurrency ? (
+                    <div className="text-center">
+                      <div className="flex items-center justify-center mb-4">
+                        <AlertTriangle className="text-orange-400" size={32} />
+                      </div>
+                      <h3 className="text-lg font-semibold text-orange-300 mb-2">
+                        {unsupportedCurrency} Not Supported
+                      </h3>
+                      <p className="text-orange-200/80 text-sm">
+                        {unsupportedCurrency} is not supported by our exchange rate provider.
+                      </p>
+                      <p className="text-orange-200/60 text-xs mt-2">
+                        Please select a different currency or try again later.
+                      </p>
                     </div>
-                    <button
-                      onClick={refreshRate}
-                      disabled={loading}
-                      className="h-10 w-10 rounded-full glass hover:bg-white/20 flex items-center justify-center transition-all duration-300 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
-                      aria-label="Refresh rate"
-                    >
-                      <RefreshCwIcon size={18} className={`text-blue-300 ${loading ? 'animate-spin' : ''}`} />
-                    </button>
-                  </div>
+                  ) : temporarilyUnavailableCurrency ? (
+                    <div className="text-center">
+                      <div className="flex items-center justify-center mb-4">
+                        <AlertTriangle className="text-orange-400" size={32} />
+                      </div>
+                      <h3 className="text-lg font-semibold text-orange-300 mb-2">
+                        {temporarilyUnavailableCurrency} Temporarily Unavailable
+                      </h3>
+                      <p className="text-orange-200/80 text-sm">
+                        {temporarilyUnavailableCurrency} is temporarily unavailable.
+                      </p>
+                      <p className="text-orange-200/60 text-xs mt-2">
+                        Please select a different currency or try again later.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <p className="text-sm text-white/70 mb-1">Converted Amount</p>
+                        {loading ? (
+                          <div className="h-10 bg-white/20 loading-shimmer rounded mt-1"></div>
+                        ) : (
+                          <p className="text-3xl md:text-4xl font-bold text-white">
+                            {convertedAmount?.toFixed(2)} {toCurrency}
+                          </p>
+                        )}
+                        {exchangeRate && (
+                          <p className="text-sm text-white/70 mt-3 flex items-center">
+                            <TrendingUpIcon size={14} className="mr-1" />
+                            <span>
+                              1 {fromCurrency} = {exchangeRate.toFixed(6)} {toCurrency}
+                            </span>
+                          </p>
+                        )}
+                      </div>
+                      <button
+                        onClick={refreshRate}
+                        disabled={loading || Boolean(unsupportedCurrency)}
+                        className="h-10 w-10 rounded-full glass hover:bg-white/20 flex items-center justify-center transition-all duration-300 hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
+                        aria-label="Refresh rate"
+                      >
+                        <RefreshCwIcon size={18} className={`text-blue-300 ${loading ? 'animate-spin' : ''}`} />
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
 
