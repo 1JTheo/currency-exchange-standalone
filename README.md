@@ -72,41 +72,48 @@ npm run build
 npm run preview
 ```
 
-## 🌐 Deployment
+## 🌐 Deployment Options
 
-### Deploy to Streamlit Cloud (Recommended)
+This repository supports **both React (Netlify) and Streamlit (Streamlit Cloud) deployments** from the same codebase!
 
-The easiest way to deploy this app is using the Streamlit version:
+### 🚀 Deploy React Version to Netlify
 
 1. **Push to GitHub**: Ensure your code is pushed to a GitHub repository
 
-2. **Connect to Streamlit Cloud**: 
-   - Go to [Streamlit Cloud](https://streamlit.io/cloud)
+2. **Connect to Netlify**:
+   - Go to [netlify.com](https://netlify.com) and sign up/login
+   - Click "Add new site" → "Import an existing project"
+   - Choose "Deploy with GitHub"
+   - Authorize Netlify to access your GitHub account
+   - Select your repository
+
+3. **Netlify will auto-detect** the `netlify.toml` configuration and use:
+   - **Build command**: `npm run build`
+   - **Publish directory**: `dist`
+   - **Node version**: 18
+
+4. **Deploy**: Click "Deploy site"
+
+### 🌟 Deploy Streamlit Version to Streamlit Cloud
+
+1. **Go to Streamlit Cloud**: Visit [share.streamlit.io](https://share.streamlit.io)
+
+2. **Connect Repository**:
    - Connect your GitHub account
-   - Select this repository
+   - Select your repository
    - Set main file path to: `app.py`
 
-3. **Deploy**: Streamlit Cloud will automatically install dependencies from `requirements.txt` and deploy your app
+3. **Deploy**: Streamlit Cloud will automatically install dependencies from `requirements.txt`
 
-### Deploy React Version
+### 🎯 Both Apps Provide:
 
-#### Netlify
-```bash
-npm run build
-# Drag and drop 'dist' folder to netlify.com/drop
-```
-
-#### Vercel
-```bash
-npm run build
-vercel --prod
-```
-
-#### GitHub Pages
-```bash
-npm run build
-# Push 'dist' folder contents to gh-pages branch
-```
+- ✅ Real-time currency conversion
+- ✅ Historical exchange rate charts
+- ✅ Support for 65+ currencies including African currencies
+- ✅ Error handling for unsupported currencies
+- ✅ Same-currency selection warnings
+- ✅ Mobile-responsive design
+- ✅ Developer branding
 
 ## 📊 Performance
 
