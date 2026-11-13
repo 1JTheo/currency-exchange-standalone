@@ -1,271 +1,62 @@
-# Currency Exchange - Real-time Converter
+# Exchange — every currency, one honest rate
 
-🌍 **A beautiful, production-ready currency exchange application with real-time rates and historical data**
+A fast, mobile-friendly currency converter for **339 currencies**: every world currency (including all African currencies — NGN, GHS, KES, XOF, XAF…), 130+ cryptocurrencies, precious metals and retired currencies.
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-Visit%20App-blue)](your-streamlit-url-here)
-[![Build Status](https://img.shields.io/badge/Build-Passing-green)]()
 [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-## ✨ Features
+## Features
 
-- 🔄 **Real-time Exchange Rates** - Live data from Frankfurter API
-- 📊 **Historical Charts** - 30-day historical rate visualization with interactive tooltips
-- 🌍 **65+ Currencies** - Including major African currencies (NGN, ZAR, KES, etc.)
-- 📱 **Mobile Responsive** - Perfect experience on all devices
-- ⚡ **Lightning Fast** - Optimized build with code splitting
-- 🎨 **Modern UI** - Glass morphism design with smooth animations
-- ♿ **Accessible** - WCAG compliant with keyboard navigation
-- 🚀 **Production Ready** - Optimized for deployment on any platform
+- **339 currencies** — fiat, crypto (BTC, ETH, USDT…), metals (gold, silver, platinum, palladium) and retired currencies (EEK, DEM, FRF…)
+- **Two-way conversion** — type in either field
+- **Searchable picker** — search by code or name ("naira", "bitcoin"), filter by World / Crypto / Metals / Retired, full keyboard support
+- **Historical chart** — 7D / 1M / 3M / 1Y with hover readout and % change
+- **At a glance** — your amount in a customisable list of currencies (saved in the browser)
+- **Shareable links** — the URL keeps the pair and amount, e.g. `?from=EUR&to=NGN&amount=250`
+- **Light & dark mode** following the system setting
+- **No API key** — nothing to expire
 
-## 🌍 Supported African Currencies
+## Data source
 
-- **NGN** - Nigerian Naira
-- **ZAR** - South African Rand
-- **EGP** - Egyptian Pound
-- **MAD** - Moroccan Dirham
-- **KES** - Kenyan Shilling
-- **GHS** - Ghanaian Cedi
-- **UGX** - Ugandan Shilling
-- **TZS** - Tanzanian Shilling
-- **XOF** - West African CFA Franc
-- **XAF** - Central African CFA Franc
-- And many more...
+Rates come from the open-source [Exchange API](https://github.com/fawazahmed0/exchange-api) by Fawaz Ahmed: free, no key, no rate limits, updated daily. Requests go to jsDelivr first and fall back to the Cloudflare Pages mirror automatically. Historical data comes from the same API's dated snapshots.
 
-> **Note:** Some African currencies may have limited historical data availability. The app provides intelligent fallback with trend simulations for currencies without full historical data support.
+Rates are mid-market reference rates for information only.
 
-## 🚀 Quick Start
-
-### Prerequisites
-- Node.js 18+ 
-- npm or yarn
-
-### Installation
+## Quick start
 
 ```bash
-# Clone the repository
-git clone https://github.com/odubela/currency-exchange-app.git
-cd currency-exchange-app
-
-# Install dependencies
 npm install
-
-# Start development server
-npm run dev
-```
-
-### Streamlit Version
-
-A Python Streamlit version is available for easy deployment:
-
-```bash
-# Run the Streamlit app locally
-streamlit run app.py
-```
-
-### Build for Production
-
-```bash
-# Create production build
-npm run build
-
-# Preview production build
+npm run dev       # http://localhost:3000
+npm run build     # production build in dist/
 npm run preview
 ```
 
-## 🌐 Deployment Options
+## Deploying to Netlify
 
-This repository supports **both React (Netlify) and Streamlit (Streamlit Cloud) deployments** from the same codebase!
+Netlify picks up the build automatically:
 
-### 🚀 Deploy React Version to Netlify
+- **Build command:** `npm run build`
+- **Publish directory:** `dist`
+- **Node:** 20 or newer (set to 22 in `netlify.toml`)
 
-1. **Push to GitHub**: Ensure your code is pushed to a GitHub repository
+No environment variables are needed.
 
-2. **Connect to Netlify**:
-   - Go to [netlify.com](https://netlify.com) and sign up/login
-   - Click "Add new site" → "Import an existing project"
-   - Choose "Deploy with GitHub"
-   - Authorize Netlify to access your GitHub account
-   - Select your repository
+## Project structure
 
-3. **Netlify will auto-detect** the `netlify.toml` configuration and use:
-   - **Build command**: `npm run build`
-   - **Publish directory**: `dist`
-   - **Node version**: 18
-
-4. **Deploy**: Click "Deploy site"
-
-### 🌟 Deploy Streamlit Version to Streamlit Cloud
-
-1. **Go to Streamlit Cloud**: Visit [share.streamlit.io](https://share.streamlit.io)
-
-2. **Connect Repository**:
-   - Connect your GitHub account
-   - Select your repository
-   - Set main file path to: `app.py`
-
-3. **Deploy**: Streamlit Cloud will automatically install dependencies from `requirements.txt`
-
-### 🎯 Both Apps Provide:
-
-- ✅ Real-time currency conversion
-- ✅ Historical exchange rate charts
-- ✅ Support for 65+ currencies including African currencies
-- ✅ Error handling for unsupported currencies
-- ✅ Same-currency selection warnings
-- ✅ Mobile-responsive design
-- ✅ Developer branding
-
-## 📊 Performance
-
-- **Lighthouse Score**: 95+ across all metrics
-- **Bundle Size**: ~150KB gzipped
-- **First Contentful Paint**: <1.5s
-- **Time to Interactive**: <2s
-
-## 🛠️ Technical Stack
-
-| Technology | Purpose |
-|------------|---------|
-| **React 18** | Modern UI framework with hooks |
-| **TypeScript** | Type safety and developer experience |
-| **Vite** | Ultra-fast build tool and dev server |
-| **Tailwind CSS** | Utility-first CSS framework |
-| **Lucide React** | Beautiful, customizable icons |
-| **Frankfurter API** | Real-time exchange rate data (Free) |
-| **Streamlit** | Python framework for easy deployment |
-| **Requests** | HTTP library for API calls |
-
-## 📊 Streamlit App Features
-
-The `app.py` file provides the same functionality as the React app:
-
-- ✅ Real-time currency conversion
-- ✅ Historical data visualization
-- ✅ Support for 65+ currencies including African currencies
-- ✅ Error handling for unsupported currencies
-- ✅ Same-currency selection warnings
-- ✅ Mobile-responsive design
-- ✅ Developer branding in sidebar
-
-## 🎨 Features Showcase
-
-### Real-time Conversion
-- Instant currency conversion as you type
-- Live exchange rates updated automatically
-- Support for decimal precision
-
-### Historical Data Visualization  
-- Interactive 30-day historical charts
-- Hover tooltips showing exact rates
-- Smooth animations and transitions
-
-### Enhanced UX for African Markets
-- Quick selection buttons for popular African currencies
-- Currency names displayed alongside codes
-- NGN (Nigerian Naira) set as default base currency
-
-### Mobile-First Design
-- Responsive layout that works on all screen sizes
-- Touch-friendly interface elements
-- Optimized for mobile performance
-
-## 🔧 Configuration
-
-### Environment Variables
-```bash
-# Optional: Custom API base URL
-VITE_API_BASE_URL=https://api.frankfurter.app
-
-# Optional: App branding
-VITE_APP_NAME=Currency Exchange
+```
+src/
+  App.tsx                     page layout, converter, at-a-glance list
+  components/
+    CurrencyPicker.tsx        searchable currency modal
+    RateChart.tsx             SVG history chart
+    CurrencyBadge.tsx         flag / code badge
+  lib/
+    api.ts                    rate fetching, mirrors, caching, history
+    currencies.ts             currency list helpers and number formatting
+    currencyData.ts           generated list of all 339 currencies
 ```
 
-### Customization
+## Author
 
-#### Add More Currencies
-Edit the `fallbackCurrencies` array in `App.tsx`:
+**Joseph Theophilus Odubena** — [LinkedIn](https://www.linkedin.com/in/theophilus-odubena-180148180/) · [GitHub](https://github.com/1JTheo)
 
-```typescript
-const fallbackCurrencies = [
-  'USD', 'EUR', 'GBP', 'JPY',
-  'YOUR_CURRENCY_CODE_HERE'
-];
-```
-
-#### Modify Color Scheme
-Update `tailwind.config.js`:
-
-```javascript
-theme: {
-  extend: {
-    colors: {
-      primary: {
-        // Your custom colors
-      }
-    }
-  }
-}
-```
-
-## 📱 Browser Compatibility
-
-- ✅ Chrome (latest)
-- ✅ Firefox (latest) 
-- ✅ Safari (latest)
-- ✅ Edge (latest)
-- ✅ Mobile browsers (iOS Safari, Chrome Mobile)
-
-## � API Information
-
-This app uses the **Frankfurter API** which provides:
-- ✅ **Free to use** - No API key required
-- ✅ **Real-time rates** - Updated multiple times daily
-- ✅ **Historical data** - Up to several years of history
-- ✅ **Reliable** - Maintained by European Central Bank data
-- ✅ **CORS enabled** - Works from any domain
-
-**Rate Limits**: No explicit limits for reasonable usage
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create your feature branch: `git checkout -b feature/amazing-feature`
-3. Commit your changes: `git commit -m 'Add some amazing feature'`
-4. Push to the branch: `git push origin feature/amazing-feature`
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👨‍💻 Developer
-
-**Joseph Theophilus Odubena**  
-*Full Stack Developer*
-
-Passionate about solving humanity's challenges through technology. Building innovative solutions across various sectors.
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-blue)](https://www.linkedin.com/in/theophilus-odubena-180148180/)
-[![GitHub](https://img.shields.io/badge/GitHub-Follow-black)](https://github.com/odubela)
-
----
-
-## �🙏 Acknowledgments
-
-- [Frankfurter API](https://www.frankfurter.app/) for providing free exchange rate data
-- [Lucide](https://lucide.dev/) for beautiful icons
-- [Tailwind CSS](https://tailwindcss.com/) for the utility-first CSS framework
-
-## 📧 Support
-
-If you encounter any issues or have questions:
-
-1. Check the [Issues](../../issues) tab
-2. Create a new issue with detailed information
-3. Join the discussion in existing issues
-
----
-
-**⭐ If you find this project useful, please give it a star!**
-
-[![GitHub stars](https://img.shields.io/github/stars/odubela/currency-exchange-app?style=social)](https://github.com/odubela/currency-exchange-app/stargazers)
+MIT licensed.
